@@ -1,0 +1,56 @@
+:root{
+
+	--cprimary       : #668382;
+	--csecundary     : #C2BCBA;
+	--cresaltado     : #BD7567;
+	--cbase          : #C2BCBA;
+	--cbtnprimary    : #B65F4F;
+	--cbtnsecundary  : #453538;
+	--cbtnadmin      : #B89595;
+}
+
+.cofco{
+	font-family: 'Hubballi', cursive;
+}
+
+.cofco .cap{
+	color: var(--cresaltado);
+}
+
+.cofco-wrap{
+	margin: 20px;
+	background: #FFF;
+}
+
+.cofco-tabs{
+	margin: 0px;
+	padding: 0px;
+	padding-left: 30px;
+}
+
+.cofco-tabs-content{
+	border: 1px solid #5A5A5A;
+	margin-top: -7px;
+	
+}
+
+.cofco-tabs li{
+	display: inline-flex;
+	list-style: none;
+} 
+
+.cofco-tabs li a{
+	font-size: 20px;
+	padding: 10px 20px;
+	text-decoration: none;
+	color: #000;
+	border: 1px solid #FFF;
+	background: #F1F1F1;
+	border-bottom: none !important;
+}
+
+.cofco-tabs li a.active{
+	border: 1px solid #5A5A5A;
+	background: #FFFFFF;
+	border-bottom: 1px solid #FFF !important;
+}
