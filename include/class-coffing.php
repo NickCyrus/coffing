@@ -24,10 +24,16 @@
 						add_action( 'admin_notices', 'woo_not_install' );
 					}
 
+
 					add_action('admin_menu',[ $this, 'setMenuOptions' ] , 20);
 
 					add_action('init',[ $this, 'registerCssAndJs' ] , 20);
 					add_action('admin_head', [ $this, 'registerCssAndJsInHead' ] , 20 );
+
+					if (!$this->getopc('conffi_config')){
+						add_action( 'admin_notices', 'coffig_not_conffig' );
+					}
+					
 
 			}
 
@@ -41,7 +47,8 @@
 
 					$css = [
 							'https://fonts.googleapis.com/css2?family=Hubballi&display=swap',
-
+								
+							COFCO_PLUGIN_ADMIN_URL.'asset/css/bootstrap.min.css',
 							COFCO_PLUGIN_ADMIN_URL.'asset/js/plugins/sweetalert2/sweetalert2.min.css',
 							COFCO_PLUGIN_ADMIN_URL.'asset/css/coffing.css',
 
@@ -72,6 +79,18 @@
 
 			}
 
+			static public function getopc($value){
+				return get_option($value);
+			}
+
+			static public function setopc($key , $value){
+				return update_option( $key , $value);
+			}
+
+			static public function addopc($key , $value){
+				return add_option( $key , $value);
+			}
+
 			public function setMenuOptions(){
 
 					 
@@ -83,6 +102,7 @@
 									  COFCO_PLUGIN_ADMIN_URL.'images/icon-2x32.png'
 									);
 
+						add_submenu_page($this->slug, 'Configuración',  'Configuración',  'manage_options', 'coffing_config', [$this, 'coffing_config']);
 						add_submenu_page($this->slug, 'Pedidos',  'Pedidos',  'manage_options', 'coffing_pedidos', [$this, 'coffing_pedidos']);
 						add_submenu_page($this->slug, 'Cajas',  'Cajas',  'manage_options', 'coffing_cajas', [$this, 'coffing_cajas']);
 						add_submenu_page($this->slug, 'Productos',  'Productos',  'manage_options', 'coffing_productos', [$this, 'coffing_productos']);
@@ -100,9 +120,10 @@
 			function coffing_cajas(){  $this->coffing_action('coffing_cajas'); }
 			function coffing_productos(){  $this->coffing_action('coffing_productos'); }
 			function coffing_franjas(){  $this->coffing_action('coffing_franjas'); }
-
+			function coffing_config(){  $this->coffing_action('coffing_config'); }
 			
-			function coffing_action($action){
+			
+			static public function coffing_action($action){
 
 				$page = $action;
 				$_REQUEST['action'] =  $action;
@@ -114,6 +135,70 @@
 					echo "<h1>Upsss!!, opcion no valida</h1>";
 				}
 			}
+
+			static public  function redirec($opc){
+
+					switch ($opc) {
+						case 'config':
+								self::coffing_action('config');
+						break;
+						default:
+							// code...
+						break;
+					}
+
+			}
+
+			static public function getCategoryProduct($args = array())
+			{
+
+				$default =  ['number'=>'','orderby'=>'name','order'=>'ASC', 'hide_empty'=>true, 'ids'=>''];
+				
+				$args = array_merge($args , $default);
+ 
+				extract($args , EXTR_SKIP);
+
+				$args = array(
+				    'taxonomy'   => "product_cat",
+				    'number'     => $number,
+				    'orderby'    => $orderby,
+				    'order'      => $order,
+				    'hide_empty' => $hide_empty,
+				    'include'    => $ids
+				);
+				
+				return get_terms($args);
+
+
+			}
+
+			static public function getCategoryProductSelec($select = '')
+			{
+					$cats  = self::getCategoryProduct();
+					/*
+					[term_id] => 17
+					            [name] => Tshirts
+					            [slug] => tshirts
+					            [term_group] => 0
+					            [term_taxonomy_id] => 17
+					            [taxonomy] => product_cat
+					            [description] => 
+					            [parent] => 16
+					            [count] => 1
+					            [filter] => raw
+					*/ 
+					
+					$option = '';
+					            
+					if ($cats){
+						foreach($cats as $cat){
+							$option .= "<option value='{$cat->term_id}' data-parent='{$cat->parent}' data-count='{$cat->count}'>{$cat->name}</option>"; 
+						}
+					}
+					 
+					return $option;
+			}
+
 
 	 /* End class */
 

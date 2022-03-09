@@ -9,6 +9,12 @@
 	--cbtnadmin      : #B89595;
 }
 
+.w100{width: 100%; max-width: 100% !important;}
+.dblock{display: block;}
+.drelative{display: drelative;}
+
+
+
 .cofco{
 	font-family: 'Hubballi', cursive;
 }
@@ -53,4 +59,28 @@
 	border: 1px solid #5A5A5A;
 	background: #FFFFFF;
 	border-bottom: 1px solid #FFF !important;
+}
+
+
+/*********** CARD **/
+
+.cofco-card{
+	border: 2px solid var(--cprimary);
+	border-radius: 5px;
+	background: #FFF;
+	overflow: hidden;
+}
+
+.cofco-card-header{
+	font-size: 17px;
+	font-weight: bold;
+	padding: 10px 20px;
+	background: var(--csecundary);
+	border-bottom: none;
+
+}
+
+.cofco-card-body{
+	padding: 20px;
+	background: #f9f9f9;
 }

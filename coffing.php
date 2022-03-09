@@ -21,6 +21,7 @@ if ( ! defined( 'COFCO_PLUGIN_PUBLIC' ) )  define( 'COFCO_PLUGIN_PUBLIC', COFCO_
 if ( ! defined( 'COFCO_PLUGIN_ADMIN_URL' ) )  define( 'COFCO_PLUGIN_ADMIN_URL', WP_CONTENT_URL.'/plugins/'.basename(__DIR__).'/admin/' );
 if ( ! defined( 'COFCO_PLUGIN_PUBLIC_URL' ) )  define( 'COFCO_PLUGIN_PUBLIC_URL', WP_CONTENT_URL.'/plugins/'.basename(__DIR__).'/public/' );
 
+include_once COFCO_PLUGIN . '/include/functions.php';
 include_once COFCO_PLUGIN . '/include/noticies.php';
 include_once COFCO_PLUGIN . '/include/class-coffing.php';
 
