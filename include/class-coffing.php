@@ -10,7 +10,8 @@
 			var $slug = 'cofco';
 
 			public function __construct(){
-					$this->checkRequeriment();
+
+				add_action( 'woocommerce_loaded', array( $this, 'checkRequeriment' ) );
 					 
 			}
 
@@ -24,7 +25,12 @@
 						add_action( 'admin_notices', 'woo_not_install' );
 					}
 
-
+					require_once COFCO_PLUGIN.'/include/class-wc-product-coffing.php';
+					add_filter( 'product_type_selector', array( $this, 'add_type_coffing_caja' ) );
+					register_activation_hook( __FILE__, array( $this, 'set_product_type' ) );
+					add_filter( 'woocommerce_product_data_tabs', array( $this, 'add_coffcaja_product_tab' ), 50 );
+        			add_action( 'woocommerce_product_data_panels', array( $this, 'add_coffcaja_product_tab_content' ) );
+					 
 					add_action('admin_menu',[ $this, 'setMenuOptions' ] , 20);
 
 					add_action('init',[ $this, 'registerCssAndJs' ] , 20);
@@ -48,7 +54,7 @@
 					$css = [
 							'https://fonts.googleapis.com/css2?family=Hubballi&display=swap',
 								
-							COFCO_PLUGIN_ADMIN_URL.'asset/css/bootstrap.min.css',
+							// COFCO_PLUGIN_ADMIN_URL.'asset/css/bootstrap.min.css',
 							COFCO_PLUGIN_ADMIN_URL.'asset/js/plugins/sweetalert2/sweetalert2.min.css',
 							COFCO_PLUGIN_ADMIN_URL.'asset/css/coffing.css',
 
@@ -200,7 +206,72 @@
 			}
 
 
-	 /* End class */
+			function add_type_coffing_caja( $types ) {
+				$types['coffcaja'] = __( 'Coffing Cajas', 'yourtextdomain' );
+			    return $types;
+			}
+
+			public function set_product_type() {
+		        if ( ! get_term_by( 'slug', 'coffcaja', 'product_type' ) ) {
+			 			 wp_insert_term( 'coffcaja', 'product_type' );
+		        }
+		    }
+
+		    public function add_coffcaja_product_tab( $tabs ) {
+
+			      $tabs['coffcaja_type'] = array(
+													'label'    => __( 'Opciones de Caja', 'your_textdomain' ),
+													'target' => 'coffcaja_type_product_options',
+													'class'  => 'show_if_coffcaja',
+													'priority'=>5
+											     );
+			        
+			        
+			      return $tabs;
+			    }
+			    
+		    /**
+		     * Add Content to Product Tab
+		     */
+
+		    public function add_coffcaja_product_tab_content() {
+		      global $product_object;
+		      ?>
+		      <div id='coffcaja_type_product_options' class='panel woocommerce_options_panel hidden'>
+		        <div class='options_group'>
+		        <?php
+
+		        woocommerce_wp_text_input(
+		          array(
+		            'id'          => '_some_data',
+		            'label'       => __( 'Data', 'your_textdomain' ),
+		            'value'       => $product_object->get_meta( '_some_data', true ),
+		            'default'     => '',
+		            'placeholder' => 'Enter data',
+		        ));
+		        ?>
+		        </div>
+		        <div class='options_group'>
+								        	 <?php
+								        woocommerce_wp_select( array( // Text Field type
+						        'id'          => '_Stan[]',
+						        'label'       => __( 'Stan', 'woocommerce' ),
+						        'description' => __( 'Podaj stan plyty.', 'woocommerce' ),
+						        'desc_tip'    => true,
+						        'class'       => 'select2',
+						        'options'     => array(
+						            ''        => __( 'Select product condition', 'woocommerce' ),
+						            'Nowa'    => __('Nowa', 'woocommerce' ),
+						            'Uzywana' => __('Uzywana', 'woocommerce' ),
+						        )
+						    ) );
+					?>
+    			</div>
+		      </div>
+		      <?php
+		    }  
+
+			 /* End class */
 
 	}
 
