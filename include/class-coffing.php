@@ -238,18 +238,20 @@
 		      global $product_object;
 		      ?>
 		      <div id='coffcaja_type_product_options' class='panel woocommerce_options_panel hidden'>
-		        <div class='options_group'>
-		        <?php
 
-		        woocommerce_wp_text_input(
-		          array(
-		            'id'          => '_some_data',
-		            'label'       => __( 'Data', 'your_textdomain' ),
-		            'value'       => $product_object->get_meta( '_some_data', true ),
-		            'default'     => '',
-		            'placeholder' => 'Enter data',
-		        ));
+		        <div class='options_group'>
+		        
+		        <?php
+			        woocommerce_wp_text_input(
+			          array(
+			            'id'          => '_some_data',
+			            'label'       => __( 'Data', 'your_textdomain' ),
+			            'value'       => $product_object->get_meta( '_some_data', true ),
+			            'default'     => '',
+			            'placeholder' => 'Enter data',
+			        ));
 		        ?>
+
 		        </div>
 		        <div class='options_group'>
 								        	 <?php
