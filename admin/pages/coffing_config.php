@@ -2,8 +2,7 @@
 	<h1 class="cap">Configuración Coffing Control</h1>
 
 	<form action="admin.php?page=<?php echo $_GET["page"]?>">
-		<div class="row">
-			<div class="col-md-4">
+			<div class="grid col-220">
 					<div class="cofco-card">
 						<div class="cofco-card-header">
 							CATEGORIA DE CAJAS
@@ -16,9 +15,7 @@
 							<p> <i>Selecione la categoria de productos que corresponde a las cajas</i> </p>
 						</div>
 					</div>
-
 			</div>
-		</div>
 	</form>
 
 </div> 
