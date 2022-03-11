@@ -11,7 +11,6 @@
 /************** SYSTEM GRID ****************/
 .grid {
 	float: left;
-	margin-bottom: 2.127659574468%;
 	padding-top: 0;
 }
 
@@ -127,3 +126,68 @@
 	padding: 20px;
 	background: #f9f9f9;
 }
+
+.coffing-table table{
+	width: 100%;
+}
+
+.coffing-toolbar , 
+.coffing-table {
+	padding: 10px 20px 10px 12px !important
+}
+
+.coffing-table .table,
+.coffing-table table {
+	width: 100%;
+    border-collapse: collapse; 
+    border: 1px solid #898686;
+}
+
+.tc{ text-align: center; }
+.hand{ cursor: pointer; }
+
+li.cap{ border-bottom: 2px solid #898686; }
+li.item{ border-bottom: 1px solid #E5E5E5 !important;}
+li.item:last-child{	border-bottom: none !important;}
+
+.coffproduct-image-row ,
+.coffproduct-name-row
+{
+	float: left;
+}
+
+.coffproduct-name-row
+{
+    padding: 3px 0px 3px 10px;
+    font-size: 14px;
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.coffproduct-image-row img{
+	border-radius: 5px;
+}
+
+.coffing-table table thead tr {
+	background: #eeeeee;
+}
+
+.coffing-table .title-product{
+	padding: 9px;
+}
+
+.coffing-toolbar .btn-action{
+    padding: 4px;
+    margin-left: 5px;
+}
+
+.coffing-table li{
+	padding: 0px;
+	margin: 0px;
+}
+
+.coffing-table .table .grid {
+	padding: 5px;
+}
+
+.clear{ clear: both; }

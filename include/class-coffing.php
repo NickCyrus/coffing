@@ -293,7 +293,7 @@
     			$case  = $_POST['opc'];
     			switch($case){
     				case 'add_product_coffing':
-
+    					get_template_coffing( COFCO_PLUGIN_ADMIN.'pages/admin-product-row.php' , $_POST);
     				break;
     				default:
     					pre($_REQUEST);	

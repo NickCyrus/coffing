@@ -5,7 +5,7 @@
 			   $args = array(
 			        'post_type'      => 'product',
 			        'posts_per_page' => 10,
-			        'product_type'    => 'coffcaja'
+			        'product_type'    => ['coffproducto']
 			    );
 
 			    $loop = new WP_Query( $args );

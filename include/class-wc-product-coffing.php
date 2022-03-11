@@ -12,23 +12,30 @@ class WC_Product_Coffcaja extends WC_Product_Simple {
     public function get_type() {
         return 'coffcaja';
     }
+     
+}
 
+class WC_Product_Coffproducto extends WC_Product_Simple {
+    
     /**
-     * Returns the product's active price.
-     *
-     * @param  string $context What the value is for. Valid values are view and edit.
-     * @return string price
+     * Return the product type
+     * @return string
      */
-     public function get_price( $context = 'view' ) {
+    public function get_type() {
+        return 'coffproducto';
+    }
+     
+}
 
-        if ( current_user_can('manage_options') ) {
-            $price = $this->get_meta( '_coffing_price', true );
-            if ( is_numeric( $price ) ) {
-                return $price;
-            }
-        
-        }
-        return $this->get_prop( 'price', $context );
-      }
+class WC_Product_Coffextra extends WC_Product_Simple {
+    
+    /**
+     * Return the product type
+     * @return string
+     */
+    public function get_type() {
+        return 'coffextra';
+    }
+     
 }
 
