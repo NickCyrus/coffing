@@ -25,12 +25,25 @@
 						add_action( 'admin_notices', 'woo_not_install' );
 					}
 
+
 					require_once COFCO_PLUGIN.'/include/class-wc-product-coffing.php';
-					add_filter( 'product_type_selector', array( $this, 'add_type_coffing_caja' ) );
+
 					register_activation_hook( __FILE__, array( $this, 'set_product_type' ) );
-					add_filter( 'woocommerce_product_data_tabs', array( $this, 'add_coffcaja_product_tab' ), 50 );
-        			add_action( 'woocommerce_product_data_panels', array( $this, 'add_coffcaja_product_tab_content' ) );
-					 
+
+					/***************** OPTIONS CAJA ************************/
+
+						add_filter( 'product_type_selector', array( $this, 'add_type_coffing_caja' ) );
+						add_filter( 'woocommerce_product_data_tabs', array( $this, 'add_coffcaja_product_tab' ), 50 );
+	        			add_action( 'woocommerce_product_data_panels', array( $this, 'add_coffcaja_product_tab_content' ) );
+	        			add_action( 'woocommerce_process_product_meta_coffcaja', array( $this, 'save_coffcaja_settings' ) );
+						
+						add_action( 'wp_ajax_ajax_coffing', array( $this, 'ajax_coffing' ) );
+						add_action( 'wp_ajax_nopriv_ajax_coffing' , array( $this, 'ajax_coffing' ));
+
+
+					/*********************************************************/
+
+
 					add_action('admin_menu',[ $this, 'setMenuOptions' ] , 20);
 
 					add_action('init',[ $this, 'registerCssAndJs' ] , 20);
@@ -68,6 +81,7 @@
 
 					$js = [
 							COFCO_PLUGIN_ADMIN_URL.'asset/js/plugins/sweetalert2/sweetalert2.all.min.js',
+							COFCO_PLUGIN_ADMIN_URL.'asset/js/plugins/jQuery.numeric.js',
 							COFCO_PLUGIN_ADMIN_URL.'asset/js/coffing-functions.js',
 							COFCO_PLUGIN_ADMIN_URL.'asset/js/coffing.js',
 
@@ -78,9 +92,19 @@
 					foreach ($js as $item) {
 						$ver  = rand();
 						wp_enqueue_script( $this->slug.str_replace('.','-',basename($item)), $item, '', $ver );
+
+						
 					}
 
+					wp_localize_script( $this->slug.str_replace('.','-',basename($item)), 'ajax_coffing',
+							array(
+							        'url'    => admin_url( 'admin-ajax.php' ),
+							        'nonce'  => wp_create_nonce( 'my-ajax-nonce' ),
+							        'action' => 'ajax_coffing'
+    						  )
+						);
 
+					 
 
 
 			}
@@ -207,7 +231,9 @@
 
 
 			function add_type_coffing_caja( $types ) {
-				$types['coffcaja'] = __( 'Coffing Cajas', 'yourtextdomain' );
+				$types['coffcaja']     = __( 'Coffing Cajas', 'yourtextdomain' );
+				$types['coffproducto'] = __( 'Coffing Producto', 'yourtextdomain' );
+				$types['coffextra']    = __( 'Coffing Producto Extra', 'yourtextdomain' );
 			    return $types;
 			}
 
@@ -235,45 +261,50 @@
 		     */
 
 		    public function add_coffcaja_product_tab_content() {
-		      global $product_object;
-		      ?>
-		      <div id='coffcaja_type_product_options' class='panel woocommerce_options_panel hidden'>
-
-		        <div class='options_group'>
-		        
-		        <?php
-			        woocommerce_wp_text_input(
-			          array(
-			            'id'          => '_coffcaja_price',
-			            'label'       => __( 'Data', 'your_textdomain' ),
-			            'value'       => $product_object->get_meta( '_coffcaja_price', true ),
-			            'default'     => '',
-			            'placeholder' => 'Enter data',
-			        ));
-		        ?>
-
-		        </div>
-		        <div class='options_group'>
-								        	 <?php
-								        woocommerce_wp_select( array( // Text Field type
-						        'id'          => '_Stan[]',
-						        'label'       => __( 'Stan', 'woocommerce' ),
-						        'description' => __( 'Podaj stan plyty.', 'woocommerce' ),
-						        'desc_tip'    => true,
-						        'class'       => 'select2',
-						        'options'     => array(
-						            ''        => __( 'Select product condition', 'woocommerce' ),
-						            'Nowa'    => __('Nowa', 'woocommerce' ),
-						            'Uzywana' => __('Uzywana', 'woocommerce' ),
-						        )
-						    ) );
-					?>
-    			</div>
-		      </div>
-		      <?php
+		       	include(COFCO_PLUGIN_ADMIN."pages/admin-form-coffcaja.php");
 		    }  
 
-			 /* End class */
+			
+			public function save_coffcaja_settings( $post_id ) {
+      			$price = isset( $_POST['_coffcaja_price'] ) ? sanitize_text_field( $_POST['_coffcaja_price'] ) : '';
+      			update_post_meta( $post_id, '_coffcaja_price', (float)$price );
+      			update_post_meta( $post_id, '_price', (float)$price);
+      			update_post_meta( $post_id, '_regular_price', (float)$price);
+    		}
+
+    		static public function get_product_coffing()
+    		{
+    			 $args = array(
+						        'post_type'      => 'product',
+						        'posts_per_page' => -1,
+						        'product_type'   => ['coffproducto','coffextra'],
+						        'orderby'		 => 'post_title',
+						        'order'			 => 'ASC'	
+			    			  );
+
+			    return new WP_Query( $args );
+    		}
+
+
+
+    		public function ajax_coffing()
+    		{
+
+    			$case  = $_POST['opc'];
+    			switch($case){
+    				case 'add_product_coffing':
+
+    				break;
+    				default:
+    					pre($_REQUEST);	
+    				break;
+    			}
+    			
+    			exit();
+    		}
+
+
+	/* End class */
 
 	}
 
