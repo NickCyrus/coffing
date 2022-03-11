@@ -244,9 +244,9 @@
 		        <?php
 			        woocommerce_wp_text_input(
 			          array(
-			            'id'          => '_some_data',
+			            'id'          => '_coffcaja_price',
 			            'label'       => __( 'Data', 'your_textdomain' ),
-			            'value'       => $product_object->get_meta( '_some_data', true ),
+			            'value'       => $product_object->get_meta( '_coffcaja_price', true ),
 			            'default'     => '',
 			            'placeholder' => 'Enter data',
 			        ));
