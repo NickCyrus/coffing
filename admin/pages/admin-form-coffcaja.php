@@ -21,33 +21,69 @@
 		        ?>
 
 		        </div>
+				
+				
 
-		         <div class="coffing-toolbar toolbar-top">
-		         	 
-		         	  <select class="select" id="select_product_coffing">
-		         	  		<option selected value> -- Seleccionar productos</option>
-		         	  		<?php
-		         	  			$coffingProductos =	coffing::get_product_coffing();
-		         	  		 	if ($coffingProductos->posts):
-		         	  				foreach($coffingProductos->posts as $cofpro){
-		         	  					echo "<option value='{$cofpro->ID}'>{$cofpro->post_title}</option>";
-		         	  				}
-		         	  			endif;
-		         	  		?>
-				      </select> 
-					  <button class="btn-action" type="button" onclick="fn.add_product_caja('#select_product_coffing')">Agregar producto </button>
+		         <div class="coffing-toolbar toolbar-top row">
+		         	 <div class="col-6 select-btn">
+						<select class="select" id="select_product_coffing">
+								<option selected value> -- Seleccionar Productos</option>
+								<?php
+									$coffingProductos =	coffing::get_product_coffing();
+									if ($coffingProductos->posts):
+										foreach($coffingProductos->posts as $cofpro){
+											
+											echo "<option value='{$cofpro->ID}'>{$cofpro->post_title}</option>";
+										}
+									endif;
+								?>
+						</select> 
+						<button class="btn-action" type="button" onclick="fn.add_product_caja('#select_product_coffing' , this )">Agregar Producto </button>
+					  </div>	
+					  
+					  <div class="col-6 select-btn">
+						<select class="select" id="select_extras_coffing">
+								<option selected value> -- Seleccionar Extras</option>
+								<?php
+									$coffingProductos =	coffing::get_product_coffing(['coffextra']);
+									if ($coffingProductos->posts):
+										foreach($coffingProductos->posts as $cofpro){
+											
+											echo "<option value='{$cofpro->ID}'>{$cofpro->post_title}</option>";
+										}
+									endif;
+								?>
+						</select> 
+						<button class="btn-action" type="button" onclick="fn.add_product_caja('#select_extras_coffing' , this )">Agregar Extra </button>
+					  </div>				   
+
 		         </div>
+				 
+					<div class="coffing-notice notice-warning">
+							Todos los productos agregados aqui <b>NO</b> tendrán valor adicional sin importar que sea un <b>Extra</b>.			
+					</div>
 
-		          
 			        <div class="coffing-table" id="table-incluye-caja">
-			        		<ul class="table">
-			        				<li class="cap">
-			        					<div class="grid col-620 title-product"><b>PRODUCTO INCLUIDO</b></div>
+			        		<ul class="table sortable">
+			        				<li class="cap li-state-disabled">
+			        					<div class="grid col-620 title-product"><b>PRODUCTOS INCLUIDOS</b></div>
 			        					<div class="grid col-320"><b>CANTIDAD</b></div>
 			        					<div class="clear"></div>
 			        				</li>
+			        		
+							<?php
+									$incluye = $product_object->get_meta( '_product_include_coffing', true );
+									if ($incluye){
+										$incluye = json_decode($incluye, true);
+									 	foreach($incluye as $producid=>$cantidad){
+											get_template_coffing( COFCO_PLUGIN_ADMIN.'pages/admin-product-row.php' , ['product_id'=>$producid ,'cantidad'=>$cantidad] );
+										}
 
-			        		</ul>
+										echo "<script>fn.apply_plugins()</script>";
+									}
+									 
+							?>
+							</ul>
 			         
 			        </div>
 				 

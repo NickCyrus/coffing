@@ -4,6 +4,8 @@
 
 	$product = wc_get_product( $product_id );
 
+	if (!isset($cantidad)) $cantidad = 1;
+
 ?>
 <li class="item">
 	<div class="grid col-620">
@@ -17,7 +19,7 @@
 		</div>
 
 	<div class="grid col-320">
-		<input class="on tc" name="_cantidad_product[<?php echo $product_id ?>]" value="0" required /> - <a class="hand" onclick="fn.removeThisElement(this, 'li')" data-question="Desea eliminar este producto <?php echo $product->name ?>"> Eliminar </a>
+		<input class="on tc" name="_cantidad_product[<?php echo $product_id ?>]" min="1" value="<?php echo $cantidad ?>" required /> - <a class="hand" onclick="fn.removeThisElement(this, 'li')" data-question="Desea eliminar este producto <?php echo $product->name ?>"> Eliminar </a>
 	</div>
 	<div class="clear"></div>
 </li>

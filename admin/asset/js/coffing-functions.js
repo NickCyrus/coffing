@@ -21,7 +21,7 @@ fn = {
 		},
 
 
-		add_product_caja : function (obj) {
+		add_product_caja : function (obj , btn = '') {
 			
 			var ID   = $(obj).val();
 		 	if (!ID) return false;
@@ -29,6 +29,10 @@ fn = {
 		 	if ( $('._product_include[value="'+ID+'"]').size() ) return ;
 		 	
 			jQuery.ajax({
+				beforeSend : function(){
+						fn.disableSave();
+						$(btn).attr('disabled',true).addClass('bg-btn-loading-3');
+				},
 	            type: "post",
 	            url: ajax_coffing.url,
 	            data: {action : ajax_coffing.action, 
@@ -38,42 +42,26 @@ fn = {
 	            	  },
 	            
 	            success: function(result){
-	                $('#table-incluye-caja ul').append(result)
+				    $('#table-incluye-caja ul').append(result)
+					$(btn).removeAttr('disabled').removeClass('bg-btn-loading-3');
+					fn.enabledSave();
 	            }
 
 	        });
 
 
-			/*
-			jQuery.ajax({
-		            type: "POST",
-		            url: ajax_var.url,
-		            data: "action=" + ajax_var.action + "&nonce=" + ajax_var.nonce,
-		            success: function(result){
-		                $('#my-events-list').html(result);
-		            }
-        	});
-			var select = '<input class="on tc" name="_cantidad_product['+ID+']" value="0" /> - <a class="hand" onclick="fn.removeThisElement(this, \'li\')" data-question="Desea eliminar este producto '+text+'"> Eliminar </a>';
-
-			if ( $('._product_include[value="'+ID+'"]').size() ) return ;
-
-			var rowHTML = '<li class="item">\
-	        					<div class="grid col-620">\
-	        						<i class="fa"></i>\
-	        						<input type="hidden" class="_product_include" name="_product_include[]" value="'+ID+'" />'+text+'</div>\
-	        					<div class="grid col-320">'+select+'</div>\
-	        					<div class="clear"></div>\
-			        	   </li>';
-
-			$('#table-incluye-caja ul').append(rowHTML)
-			*/
+			 
 			this.apply_plugins();
 
 		},
 
 		apply_plugins : function(){
 
-				$('.on').numeric() 
+				$('.on').numeric()
+				
+				$( ".sortable" ).sortable({
+					items: "li:not(.li-state-disabled)"
+				});
 
 		},
 
@@ -96,6 +84,10 @@ fn = {
 				}
 
 		}
+
+
+		,disableSave : function(){ $('#post').submit(function(e){ e.preventDefault() }) }
+		,enabledSave : function(){ $('#post').unbind('submit') }
 
 		
 }

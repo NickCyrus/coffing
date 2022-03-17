@@ -8,6 +8,7 @@
 	class coffing{
 
 			var $slug = 'cofco';
+			var $slugsProduct = ['coffcaja','coffproducto','coffextra'];
 
 			public function __construct(){
 
@@ -36,6 +37,8 @@
 						add_filter( 'woocommerce_product_data_tabs', array( $this, 'add_coffcaja_product_tab' ), 50 );
 	        			add_action( 'woocommerce_product_data_panels', array( $this, 'add_coffcaja_product_tab_content' ) );
 	        			add_action( 'woocommerce_process_product_meta_coffcaja', array( $this, 'save_coffcaja_settings' ) );
+						add_action( 'woocommerce_process_product_meta_coffproducto', array( $this, 'save_coffproducto_settings' ) );
+						add_action( 'woocommerce_process_product_meta_coffextra', array( $this, 'save_coffextra_settings' ) );
 						
 						add_action( 'wp_ajax_ajax_coffing', array( $this, 'ajax_coffing' ) );
 						add_action( 'wp_ajax_nopriv_ajax_coffing' , array( $this, 'ajax_coffing' ));
@@ -49,10 +52,11 @@
 					add_action('init',[ $this, 'registerCssAndJs' ] , 20);
 					add_action('admin_head', [ $this, 'registerCssAndJsInHead' ] , 20 );
 
-					if (!$this->getopc('conffi_config')){
-						add_action( 'admin_notices', 'coffig_not_conffig' );
-					}
-					
+					/*
+						if (!$this->getopc('conffi_config')){
+							add_action( 'admin_notices', 'coffig_not_conffig' );
+						}
+					*/
 
 			}
 
@@ -67,7 +71,7 @@
 					$css = [
 							'https://fonts.googleapis.com/css2?family=Hubballi&display=swap',
 								
-							// COFCO_PLUGIN_ADMIN_URL.'asset/css/bootstrap.min.css',
+							COFCO_PLUGIN_ADMIN_URL.'asset/css/simple-grid.css',
 							COFCO_PLUGIN_ADMIN_URL.'asset/js/plugins/sweetalert2/sweetalert2.min.css',
 							COFCO_PLUGIN_ADMIN_URL.'asset/css/coffing.css',
 
@@ -205,19 +209,7 @@
 			static public function getCategoryProductSelec($select = '')
 			{
 					$cats  = self::getCategoryProduct();
-					/*
-					[term_id] => 17
-					            [name] => Tshirts
-					            [slug] => tshirts
-					            [term_group] => 0
-					            [term_taxonomy_id] => 17
-					            [taxonomy] => product_cat
-					            [description] => 
-					            [parent] => 16
-					            [count] => 1
-					            [filter] => raw
-					*/ 
-					
+				 
 					$option = '';
 					            
 					if ($cats){
@@ -238,12 +230,17 @@
 			}
 
 			public function set_product_type() {
-		        if ( ! get_term_by( 'slug', 'coffcaja', 'product_type' ) ) {
-			 			 wp_insert_term( 'coffcaja', 'product_type' );
-		        }
-		    }
+		        
+			 	foreach($this->slugsProduct as $slug){
+					if ( ! get_term_by( 'slug', $slug, 'product_type' ) ) {
+						wp_insert_term( $slug, 'product_type' );
+			 		}
+				}
+
+			}
 
 		    public function add_coffcaja_product_tab( $tabs ) {
+
 
 			      $tabs['coffcaja_type'] = array(
 													'label'    => __( 'Opciones de Caja', 'your_textdomain' ),
@@ -251,9 +248,22 @@
 													'class'  => 'show_if_coffcaja',
 													'priority'=>5
 											     );
-			        
+			       $tabs['coffproducto_type'] = array(
+													'label'    => __( 'Opciones de Producto', 'your_textdomain' ),
+													'target' => 'coffproducto_type_product_options',
+													'class'  => 'show_if_coffproducto',
+													'priority'=>5
+											     );
+
+					$tabs['coffextra_type'] = array(
+													'label'    => __( 'Opciones de Extra', 'your_textdomain' ),
+													'target' => 'coffextra_type_product_options',
+													'class'  => 'show_if_coffextra',
+													'priority'=>5
+											     );  								 
 			        
 			      return $tabs;
+
 			    }
 			    
 		    /**
@@ -262,22 +272,69 @@
 
 		    public function add_coffcaja_product_tab_content() {
 		       	include(COFCO_PLUGIN_ADMIN."pages/admin-form-coffcaja.php");
+				include(COFCO_PLUGIN_ADMIN."pages/admin-form-coffproducto.php");
+				include(COFCO_PLUGIN_ADMIN."pages/admin-form-coffextra.php");  
 		    }  
 
+			public function save_coffextra_settings( $post_id ) {
+				$price = isset( $_POST['_coffextra_price'] ) ? sanitize_text_field( $_POST['_coffextra_price'] ) : '';
+				update_post_meta( $post_id, '_coffextra_price', $price );
+				update_post_meta( $post_id, '_price', $price);
+				update_post_meta( $post_id, '_regular_price', $price);
+			} 
+
+			public function save_coffproducto_settings( $post_id ) {
+				$price = isset( $_POST['_coffproducto_price'] ) ? sanitize_text_field( $_POST['_coffproducto_price'] ) : '';
+				update_post_meta( $post_id, '_coffproducto_price', $price );
+				update_post_meta( $post_id, '_price', $price);
+				update_post_meta( $post_id, '_regular_price', $price);
+
+			  /***************** Productos incluidos **********************/
+			  /*	
+				$incluye  = isset( $_POST['_product_include'] ) ? $_POST['_product_include']  : '';
+				
+				if ($incluye){
+					foreach($incluye as $producto){
+						$listaProductoIncluye[$producto] = $_POST["_cantidad_product"][$producto];
+					}
+
+					if ($listaProductoIncluye){
+						update_post_meta( $post_id, '_product_include_coffing', wp_json_encode($listaProductoIncluye) );	 
+					}
+				}
+			  
+			   */
 			
+		  }
+
 			public function save_coffcaja_settings( $post_id ) {
       			$price = isset( $_POST['_coffcaja_price'] ) ? sanitize_text_field( $_POST['_coffcaja_price'] ) : '';
-      			update_post_meta( $post_id, '_coffcaja_price', (float)$price );
-      			update_post_meta( $post_id, '_price', (float)$price);
-      			update_post_meta( $post_id, '_regular_price', (float)$price);
+      			update_post_meta( $post_id, '_coffcaja_price', $price );
+      			update_post_meta( $post_id, '_price', $price);
+      			update_post_meta( $post_id, '_regular_price', $price);
+
+				/***************** Productos incluidos **********************/
+
+				$incluye  = isset( $_POST['_product_include'] ) ? $_POST['_product_include']  : '';
+				 
+				if ($incluye){
+					foreach($incluye as $producto){
+						$listaProductoIncluye[$producto] = $_POST["_cantidad_product"][$producto];
+					}
+
+					if ($listaProductoIncluye){
+						update_post_meta( $post_id, '_product_include_coffing', wp_json_encode($listaProductoIncluye) );	 
+					}
+				}
+			 
     		}
 
-    		static public function get_product_coffing()
+    		static public function get_product_coffing($type = ['coffproducto'])
     		{
     			 $args = array(
 						        'post_type'      => 'product',
 						        'posts_per_page' => -1,
-						        'product_type'   => ['coffproducto','coffextra'],
+						        'product_type'   => $type,
 						        'orderby'		 => 'post_title',
 						        'order'			 => 'ASC'	
 			    			  );
