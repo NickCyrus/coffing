@@ -234,6 +234,32 @@ li.item:last-child{	border-bottom: none !important;}
 	padding: 5px;
 }
 
+.coffing-label-input{
+	float: left;
+    width: 150px;
+    padding: 0;
+    margin-left: 12px;
+    vertical-align: middle;
+    font-size: 12px;
+}
+
+.coffing-input .coffing-img-thumb{
+	width: 50px;
+    height: 50px;
+    border: 1px solid #e5e5e5;
+}
+
+.coffing-input .coffing-img-thumb img{
+	width: 100%;
+	height: 100%;
+}
+
+
+.coffing-input{
+	width: 50%;
+	float: left;
+}
+
 .clear{ clear: both; }
 
 .bg-btn-loading,

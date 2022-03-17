@@ -284,34 +284,36 @@
 			} 
 
 			public function save_coffproducto_settings( $post_id ) {
-				$price = isset( $_POST['_coffproducto_price'] ) ? sanitize_text_field( $_POST['_coffproducto_price'] ) : '';
-				update_post_meta( $post_id, '_coffproducto_price', $price );
-				update_post_meta( $post_id, '_price', $price);
-				update_post_meta( $post_id, '_regular_price', $price);
 
-			  /***************** Productos incluidos **********************/
-			  /*	
-				$incluye  = isset( $_POST['_product_include'] ) ? $_POST['_product_include']  : '';
-				
-				if ($incluye){
-					foreach($incluye as $producto){
-						$listaProductoIncluye[$producto] = $_POST["_cantidad_product"][$producto];
-					}
+				$indices = $_POST["_coffing_variantion_product_id"];
 
-					if ($listaProductoIncluye){
-						update_post_meta( $post_id, '_product_include_coffing', wp_json_encode($listaProductoIncluye) );	 
-					}
+				if ($indices){
+						foreach($indices as $indice){
+							$variacionesProducto[] = [ 
+														'name' => $_POST["_coffing_variantion_product_name"][$indice],
+														'price'=> $_POST["_coffing_variantion_product_price"][$indice],
+														'image'=> $_POST["_coffing_variantion_product_image"][$indice], 
+													];
+						}
 				}
-			  
-			   */
-			
+				 
+				update_post_meta( $post_id, '_coffvariation_product', wp_json_encode( $variacionesProducto ) );
+		 
 		  }
 
 			public function save_coffcaja_settings( $post_id ) {
       			$price = isset( $_POST['_coffcaja_price'] ) ? sanitize_text_field( $_POST['_coffcaja_price'] ) : '';
+				$limite = isset( $_POST['_coffcaja_limite'] ) ? sanitize_text_field( $_POST['_coffcaja_limite'] ) : '';
+				$fecha_limite = isset( $_POST['_coffcaja_fecha_limite'] ) ? sanitize_text_field( $_POST['_coffcaja_fecha_limite'] ) : '';
+
       			update_post_meta( $post_id, '_coffcaja_price', $price );
       			update_post_meta( $post_id, '_price', $price);
       			update_post_meta( $post_id, '_regular_price', $price);
+
+				update_post_meta( $post_id, '_coffcaja_limite', $limite);
+				update_post_meta( $post_id, '_coffcaja_fecha_limite', $fecha_limite);
+			 
+
 
 				/***************** Productos incluidos **********************/
 
@@ -352,6 +354,9 @@
     				case 'add_product_coffing':
     					get_template_coffing( COFCO_PLUGIN_ADMIN.'pages/admin-product-row.php' , $_POST);
     				break;
+					case 'add_product_variante':
+						get_template_coffing( COFCO_PLUGIN_ADMIN.'pages/admin-product-variation-row.php' , $_POST);
+					break;
     				default:
     					pre($_REQUEST);	
     				break;

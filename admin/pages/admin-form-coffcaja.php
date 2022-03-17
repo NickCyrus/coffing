@@ -18,6 +18,26 @@
 			            'class'	      => 'price',		
 			            'placeholder' => '&euro;',
 			        ));
+		       
+			        woocommerce_wp_text_input(
+			          array(
+			            'id'          => '_coffcaja_limite',
+			            'label'       => __( 'Limite diario', 'your_textdomain' ),
+			            'description' => __( 'Limite de venta diario.', 'woocommerce' ),
+			            'value'       => $product_object->get_meta( '_coffcaja_limite', true ),
+			            'default'     => '',
+			            'class'	      => 'price' 
+			        ));
+
+					woocommerce_wp_text_input(
+						array(
+						  'id'          => '_coffcaja_fecha_limite',
+						  'label'       => __( 'Fecha limite de venta', 'your_textdomain' ),
+						  'type' => "date",
+						  'value'       => $product_object->get_meta( '_coffcaja_fecha_limite', true ),
+						  'default'     => '',
+						   
+					  ));
 		        ?>
 
 		        </div>
